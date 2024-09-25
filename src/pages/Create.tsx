@@ -1,9 +1,12 @@
+'use client';
+
 import { ChangeEvent, useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { useCreateTeamBuilding } from '@/apis/admin/mutations';
-import closeIcon from '@/assets/icons/close.svg';
+import CloseIcon from '@/assets/icons/close.svg?url';
 import TrashBinIcon from '@/assets/icons/trashbin.svg';
 import { Button } from '@/components/Button';
 import { css } from '@/styled-system/css';
@@ -33,7 +36,7 @@ const Create = () => {
   const [teamRows, setTeamRows] = useState<TeamRow[]>([]);
   const [isClickedSubmit, setIsClickedSubmit] = useState(false);
   const mutation = useCreateTeamBuilding();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleAddTeamRow = () => {
     playSound('버튼_클릭');
@@ -113,7 +116,7 @@ const Create = () => {
         },
         {
           onSuccess: ({ teamBuildingInfo }) => {
-            navigate(`/${teamBuildingInfo.teamBuildingUrl}?role=admin`);
+            router.push(`/${teamBuildingInfo.teamBuildingUrl}?role=admin`);
             playSound('페이지_전환');
           },
           onError: () => {
@@ -168,13 +171,10 @@ const Create = () => {
               className={css({ cursor: 'pointer' })}
               onClick={() => {
                 playSound('페이지_전환');
-                navigate('/');
+                router.push('/');
               }}
             >
-              <img
-                className={css({ width: '40px', height: '40px' })}
-                src={closeIcon}
-              />
+              <Image src={CloseIcon} alt="닫기 아이콘" width={40} height={40} />
             </button>
           </div>
 

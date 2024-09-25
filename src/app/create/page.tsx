@@ -1,3 +1,10 @@
+import CommonLayout from '@/layouts/CommonLayout';
+import CreatePage from '@/pages/Create';
+
 export default function Page() {
-  return <div>page</div>;
+  return (
+    <CommonLayout>
+      <CreatePage />
+    </CommonLayout>
+  );
 }
