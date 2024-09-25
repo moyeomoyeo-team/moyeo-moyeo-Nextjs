@@ -1,3 +1,10 @@
-export default function NotFound() {
-  return <div>not found</div>;
+import CommonLayout from '@/layouts/CommonLayout';
+import NotFoundPage from '@/pages/NotFound';
+
+export default function Page() {
+  return (
+    <CommonLayout>
+      <NotFoundPage />
+    </CommonLayout>
+  );
 }
