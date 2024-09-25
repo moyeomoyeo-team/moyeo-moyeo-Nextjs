@@ -1,10 +1,12 @@
-import { Outlet } from 'react-router-dom';
-
 import MobileBackgroundImage from '@/assets/images/mobile.webp';
 import { css } from '@/styled-system/css';
 import { vstack } from '@/styled-system/patterns';
 
-const MobileLayout = () => {
+type MobileLayoutProps = {
+  children: React.ReactNode;
+};
+
+const MobileLayout = ({ children }: MobileLayoutProps) => {
   return (
     <div
       className={css({
@@ -18,7 +20,7 @@ const MobileLayout = () => {
       })}
     >
       <img
-        src={MobileBackgroundImage}
+        src={MobileBackgroundImage.src}
         className={css({
           position: 'absolute',
           top: '0',
@@ -37,7 +39,7 @@ const MobileLayout = () => {
           position: 'relative',
         })}
       >
-        <Outlet />
+        {children}
       </main>
     </div>
   );

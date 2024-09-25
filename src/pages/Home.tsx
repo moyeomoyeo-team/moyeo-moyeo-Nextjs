@@ -1,29 +1,21 @@
-import { useLayoutEffect } from 'react';
+'use client';
 
-import { useSetAtom } from 'jotai';
-import { useNavigate } from 'react-router-dom';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
-import HomeLogo from '@/assets/icons/homeLogo.svg';
+import HomeLogo from '@/assets/icons/homeLogo.svg?url';
 import { Button } from '@/components/Button';
-import { isShowLottieBackgroundState } from '@/store/atoms';
 import { css } from '@/styled-system/css';
 import { vstack } from '@/styled-system/patterns';
 import { playSound } from '@/utils/sound';
 
 const Home = () => {
-  const navigate = useNavigate();
-  const setIsShowLottieBackground = useSetAtom(isShowLottieBackgroundState);
+  const router = useRouter();
 
   const handleCreateButton = () => {
-    navigate('/create');
+    router.push('/create');
     playSound('페이지_전환');
   };
-
-  useLayoutEffect(() => {
-    // @note: 이 페이지에서 lottie background를 보여줘야해서 이렇게 씀
-    setIsShowLottieBackground(true);
-    return () => setIsShowLottieBackground(false);
-  }, [setIsShowLottieBackground]);
 
   return (
     <section
@@ -32,9 +24,9 @@ const Home = () => {
         gap: '64px',
       })}
     >
-      <img
-        width="600px"
-        height="400px"
+      <Image
+        width="600"
+        height="400"
         src={HomeLogo}
         alt="모여모여 서비스 로고"
       />

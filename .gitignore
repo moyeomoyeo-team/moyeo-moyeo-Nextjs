@@ -29,3 +29,8 @@ dist-ssr
 # dotenv
 .env*
 !.env.sample
+
+# Next.js
+.next
+next-env.d.ts
+dist

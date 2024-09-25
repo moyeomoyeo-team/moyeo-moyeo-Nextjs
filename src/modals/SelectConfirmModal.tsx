@@ -1,4 +1,4 @@
-import CloseIcon from '@/assets/icons/close.svg?react';
+import CloseIcon from '@/assets/icons/close.svg';
 import { Button } from '@/components/Button';
 import { Modal } from '@/components/Modal';
 import { css } from '@/styled-system/css';

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useCreateTeamBuilding } from '@/apis/admin/mutations';
 import closeIcon from '@/assets/icons/close.svg';
-import TrashBinIcon from '@/assets/icons/trashbin.svg?react';
+import TrashBinIcon from '@/assets/icons/trashbin.svg';
 import { Button } from '@/components/Button';
 import { css } from '@/styled-system/css';
 import { center, hstack, vstack } from '@/styled-system/patterns';

@@ -12,18 +12,39 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
     "paths": {
       "@/styled-system/*": ["./styled-system/*"],
       "@/*": ["./src/*"]
-    }
+    },
+
+    /* Next.js */
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true
   },
-  "include": ["src", "**/*.ts", "**/*.tsx", "styled-system"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src",
+    "**/*.ts",
+    "**/*.tsx",
+    "styled-system",
+    "./dist/types/**/*.ts",
+    "./next-env.d.ts",
+    "next.config.mjs",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
 }

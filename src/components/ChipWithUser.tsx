@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import TrashBinIcon from '@/assets/icons/trashbin.svg?react';
+import TrashBinIcon from '@/assets/icons/trashbin.svg';
 import { css } from '@/styled-system/css';
 import { center, hstack } from '@/styled-system/patterns';
 import { Round, User } from '@/types';

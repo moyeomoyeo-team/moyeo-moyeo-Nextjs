@@ -1,6 +1,6 @@
 import { resolveUrl } from '@/utils/url';
 
-export const BASE_URL = import.meta.env.VITE_BASE_URL;
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
 
 export const httpClient = {
   get: <T>(url: string) => __fetch<T, void>('get', url),

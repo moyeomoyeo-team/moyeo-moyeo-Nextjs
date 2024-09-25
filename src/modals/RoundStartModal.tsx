@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 
-import ExtraRound from '@/assets/icons/modalLogo/extraRound.svg?react';
-import Finish from '@/assets/icons/modalLogo/finish.svg?react';
-import FirstRound from '@/assets/icons/modalLogo/firstRound.svg?react';
-import FourthRound from '@/assets/icons/modalLogo/fourthRound.svg?react';
-import SecondRound from '@/assets/icons/modalLogo/secondRound.svg?react';
-import StartRound from '@/assets/icons/modalLogo/startRound.svg?react';
-import ThirdRound from '@/assets/icons/modalLogo/thirdRound.svg?react';
+import ExtraRound from '@/assets/icons/modalLogo/extraRound.svg';
+import Finish from '@/assets/icons/modalLogo/finish.svg';
+import FirstRound from '@/assets/icons/modalLogo/firstRound.svg';
+import FourthRound from '@/assets/icons/modalLogo/fourthRound.svg';
+import SecondRound from '@/assets/icons/modalLogo/secondRound.svg';
+import StartRound from '@/assets/icons/modalLogo/startRound.svg';
+import ThirdRound from '@/assets/icons/modalLogo/thirdRound.svg';
 import { Modal } from '@/components/Modal';
 import { Round } from '@/types';
 

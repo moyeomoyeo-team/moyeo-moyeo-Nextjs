@@ -11,10 +11,10 @@ import {
   useStartTeamBuilding,
 } from '@/apis/admin/mutations';
 import { useGetTotalInfo } from '@/apis/team-building/queries';
-import CheckWithoutCircleIcon from '@/assets/icons/checkWithoutCircle.svg?react';
-import Face from '@/assets/icons/face.svg?react';
-import Group from '@/assets/icons/group.svg?react';
-import InfoOutline from '@/assets/icons/infoOutline.svg?react';
+import CheckWithoutCircleIcon from '@/assets/icons/checkWithoutCircle.svg';
+import Face from '@/assets/icons/face.svg';
+import Group from '@/assets/icons/group.svg';
+import InfoOutline from '@/assets/icons/infoOutline.svg';
 import { Button } from '@/components/Button';
 import { Chip } from '@/components/Chip';
 import { ChipWithUser } from '@/components/ChipWithUser';

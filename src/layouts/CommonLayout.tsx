@@ -1,20 +1,26 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 
 import { Player } from '@lottiefiles/react-lottie-player';
-import { useAtomValue } from 'jotai';
-import { Outlet } from 'react-router-dom';
 
-import VolumeOffIcon from '@/assets/icons/volumeOff.svg?react';
-import VolumeOnIcon from '@/assets/icons/volumeOn.svg?react';
+import VolumeOffIcon from '@/assets/icons/volumeOff.svg';
+import VolumeOnIcon from '@/assets/icons/volumeOn.svg';
 import BlurBackgroundImage from '@/assets/images/blur.webp';
 import LottieBackgroundImage from '@/assets/images/lottie.webp';
-import { isShowLottieBackgroundState } from '@/store/atoms';
 import { css } from '@/styled-system/css';
 import { center, vstack } from '@/styled-system/patterns';
 import { playSound, stopSound } from '@/utils/sound';
 
-const CommonLayout = () => {
-  const isShowLottieBackground = useAtomValue(isShowLottieBackgroundState);
+type CommonLayoutProps = {
+  isShowLottieBackground?: boolean;
+  children: React.ReactNode;
+};
+
+const CommonLayout = ({
+  isShowLottieBackground = false,
+  children,
+}: CommonLayoutProps) => {
   const [lottieSize, setLottieSize] = useState({ width: 1280, height: 720 });
   const [isPlayedBackgroundMusic, setIsPlayedBackgroundMusic] = useState(false);
 
@@ -86,7 +92,7 @@ const CommonLayout = () => {
       </button>
       {/* @note: 두 이미지를 가져오는 이유는 페이지 전환시 깜빡이는 느낌을 제거하기 위함 */}
       <img
-        src={LottieBackgroundImage}
+        src={LottieBackgroundImage.src}
         className={css({
           position: 'absolute',
           top: '0',
@@ -124,7 +130,7 @@ const CommonLayout = () => {
         </div>
       )}
       <img
-        src={BlurBackgroundImage}
+        src={BlurBackgroundImage.src}
         className={css({
           position: 'absolute',
           top: '0',
@@ -145,7 +151,7 @@ const CommonLayout = () => {
           overflow: 'hidden',
         })}
       >
-        <Outlet />
+        {children}
       </main>
     </div>
   );

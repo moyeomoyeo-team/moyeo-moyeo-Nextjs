@@ -1,4 +1,4 @@
-import InfoIcon from '@/assets/icons/info.svg?react';
+import InfoIcon from '@/assets/icons/info.svg';
 import { Button } from '@/components/Button';
 import { Modal } from '@/components/Modal';
 import { css } from '@/styled-system/css';
