@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
-import { useAtomValue } from 'jotai';
 import toast from 'react-hot-toast';
 import { Tooltip } from 'react-tooltip';
 
@@ -24,18 +23,9 @@ import { useDisclosure } from '@/hooks/useDisclosure';
 import { SelectTeamModal } from '@/modals/SelectTeamModal';
 import { ShareSurveyModal } from '@/modals/ShareSurveyModal';
 import { ConfirmModal } from '@/modals/common/ConfirmModal';
-import { eventSourceAtom } from '@/store/atoms';
 import { css } from '@/styled-system/css';
 import { center, hstack, stack, vstack } from '@/styled-system/patterns';
-import {
-  AdjustUserEvent,
-  ChangeRoundEvent,
-  CreateUserEvent,
-  DeleteUserEvent,
-  PickUserEvent,
-  Team,
-  User,
-} from '@/types';
+import { Team, User } from '@/types';
 import { POSITION, ROUND_INDEX_MAP, ROUND_LABEL_MAP } from '@/utils/const';
 import { downloadTsv } from '@/utils/file';
 import { toLocaleString } from '@/utils/format';
@@ -75,7 +65,6 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
   const shareSurveyModalProps = useDisclosure();
   const startConfirmModalProps = useDisclosure();
   const finishConfirmModalProps = useDisclosure();
-  const eventSource = useAtomValue(eventSourceAtom);
 
   const {
     data: totalInfo,
@@ -371,70 +360,69 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
     }
   }, [teamBuildingInfo?.roundStatus]);
 
-  useEffect(() => {
-    if (!eventSource) return;
+  //   if (!eventSource) return;
 
-    const handleChangeRound = (e: MessageEvent<string>) => {
-      const data: ChangeRoundEvent = JSON.parse(e.data);
-      console.log('change round', data);
+  //   const handleChangeRound = (e: MessageEvent<string>) => {
+  //     const data: ChangeRoundEvent = JSON.parse(e.data);
+  //     console.log('change round', data);
 
-      // @note: 라운드 변경시 초기화가 필요해서 refetch로 대체
-      refetchTotalInfo();
-    };
+  //     // @note: 라운드 변경시 초기화가 필요해서 refetch로 대체
+  //     refetchTotalInfo();
+  //   };
 
-    const handlePickUser = (e: MessageEvent<string>) => {
-      const data: PickUserEvent = JSON.parse(e.data);
-      console.log('pick user', data);
+  //   const handlePickUser = (e: MessageEvent<string>) => {
+  //     const data: PickUserEvent = JSON.parse(e.data);
+  //     console.log('pick user', data);
 
-      // @note: 선택된 라운드 표시를 서버에서 가져오기 위해 refetch
-      refetchTotalInfo();
-      toastWithSound.success(`${data.teamName}팀이 팀원 선택을 완료했습니다.`);
-    };
+  //     // @note: 선택된 라운드 표시를 서버에서 가져오기 위해 refetch
+  //     refetchTotalInfo();
+  //     toastWithSound.success(`${data.teamName}팀이 팀원 선택을 완료했습니다.`);
+  //   };
 
-    const handleCreateUser = (e: MessageEvent<string>) => {
-      const data: CreateUserEvent = JSON.parse(e.data);
-      console.log('create user', data);
+  //   const handleCreateUser = (e: MessageEvent<string>) => {
+  //     const data: CreateUserEvent = JSON.parse(e.data);
+  //     console.log('create user', data);
 
-      // @note: refetch 대신 쿼리 클라이언트 수정
-      setTotalInfo((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          userInfoList: [...prev.userInfoList, data],
-        };
-      });
-      toastWithSound.success(
-        `${data.userName}님의 설문 응답이 등록되었습니다.`,
-      );
-    };
+  //     // @note: refetch 대신 쿼리 클라이언트 수정
+  //     setTotalInfo((prev) => {
+  //       if (!prev) return prev;
+  //       return {
+  //         ...prev,
+  //         userInfoList: [...prev.userInfoList, data],
+  //       };
+  //     });
+  //     toastWithSound.success(
+  //       `${data.userName}님의 설문 응답이 등록되었습니다.`,
+  //     );
+  //   };
 
-    const handleDeleteUser = (e: MessageEvent<string>) => {
-      const deletedUserUuid = e.data as DeleteUserEvent;
-      console.log('delete user', deletedUserUuid);
-      // 자신이 삭제하지 않은 경우도 있을 수 있어 일단 refetch만
-      refetchTotalInfo();
-    };
-    const handleAdjustUser = (e: MessageEvent<string>) => {
-      const data: AdjustUserEvent = JSON.parse(e.data);
-      console.log('adjust user', data);
-      // 자신이 조정하지 않은 경우도 있을 수 있어 일단 refetch만
-      refetchTotalInfo();
-    };
+  //   const handleDeleteUser = (e: MessageEvent<string>) => {
+  //     const deletedUserUuid = e.data as DeleteUserEvent;
+  //     console.log('delete user', deletedUserUuid);
+  //     // 자신이 삭제하지 않은 경우도 있을 수 있어 일단 refetch만
+  //     refetchTotalInfo();
+  //   };
+  //   const handleAdjustUser = (e: MessageEvent<string>) => {
+  //     const data: AdjustUserEvent = JSON.parse(e.data);
+  //     console.log('adjust user', data);
+  //     // 자신이 조정하지 않은 경우도 있을 수 있어 일단 refetch만
+  //     refetchTotalInfo();
+  //   };
 
-    eventSource.addEventListener('create-user', handleCreateUser);
-    eventSource.addEventListener('pick-user', handlePickUser);
-    eventSource.addEventListener('change-round', handleChangeRound);
-    eventSource.addEventListener('delete-user', handleDeleteUser);
-    eventSource.addEventListener('adjust-user', handleAdjustUser);
+  //   eventSource.addEventListener('create-user', handleCreateUser);
+  //   eventSource.addEventListener('pick-user', handlePickUser);
+  //   eventSource.addEventListener('change-round', handleChangeRound);
+  //   eventSource.addEventListener('delete-user', handleDeleteUser);
+  //   eventSource.addEventListener('adjust-user', handleAdjustUser);
 
-    return () => {
-      eventSource.removeEventListener('create-user', handleCreateUser);
-      eventSource.removeEventListener('pick-user', handlePickUser);
-      eventSource.removeEventListener('change-round', handleChangeRound);
-      eventSource.removeEventListener('delete-user', handleDeleteUser);
-      eventSource.removeEventListener('adjust-user', handleAdjustUser);
-    };
-  }, [eventSource, refetchTotalInfo, setTotalInfo]);
+  //   return () => {
+  //     eventSource.removeEventListener('create-user', handleCreateUser);
+  //     eventSource.removeEventListener('pick-user', handlePickUser);
+  //     eventSource.removeEventListener('change-round', handleChangeRound);
+  //     eventSource.removeEventListener('delete-user', handleDeleteUser);
+  //     eventSource.removeEventListener('adjust-user', handleAdjustUser);
+  //   };
+  // }, [eventSource, refetchTotalInfo, setTotalInfo]);
 
   const renderTeamTitle = (teamUuid: Team['uuid']) => {
     const team = teamInfoList?.find((team) => team.uuid === teamUuid);

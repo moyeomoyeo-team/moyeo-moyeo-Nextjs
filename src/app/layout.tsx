@@ -44,7 +44,9 @@ export default function RootLayout({
         <title>모여모여 | 넥스터즈 팀빌딩 서비스</title>
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <div id="root">
+          <Providers>{children}</Providers>
+        </div>
       </body>
     </html>
   );

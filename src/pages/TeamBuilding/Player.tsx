@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useAtomValue } from 'jotai';
-
 import { useSelectUsers } from '@/apis/team-building/mutations';
 import { useGetTotalInfo } from '@/apis/team-building/queries';
 import ArrowUpIcon from '@/assets/icons/arrowUp.svg';
@@ -17,10 +15,9 @@ import AgreementModal from '@/modals/AgreementModal';
 import { OverallStatusModal } from '@/modals/OverallStatusModal';
 import RoundStartModal from '@/modals/RoundStartModal';
 import SelectConfirmModal from '@/modals/SelectConfirmModal';
-import { eventSourceAtom } from '@/store/atoms';
 import { css } from '@/styled-system/css';
 import { grid, hstack, stack, vstack } from '@/styled-system/patterns';
-import { AdjustUserEvent, DeleteUserEvent, Round, Team, User } from '@/types';
+import { Team, User } from '@/types';
 import { ROUND_INDEX_MAP, ROUND_LABEL_MAP } from '@/utils/const';
 import { playSound } from '@/utils/sound';
 import { toastWithSound } from '@/utils/toast';
@@ -31,11 +28,11 @@ type PlayerProps = {
   teamBuildingUuid: string;
 };
 
-type PickUserEvent = {
-  teamUuid: Team['uuid'];
-  teamName: string;
-  pickUserUuids: string[];
-};
+// type PickUserEvent = {
+//   teamUuid: Team['uuid'];
+//   teamName: string;
+//   pickUserUuids: string[];
+// };
 
 const ROUNDS = [
   {
@@ -61,13 +58,9 @@ const ROUNDS = [
 ];
 
 export const Player = ({ teamUuid, teamBuildingUuid }: PlayerProps) => {
-  const { data, refetch, setTotalInfo } = useGetTotalInfo(
-    teamBuildingUuid,
-    true,
-  );
+  const { data, refetch } = useGetTotalInfo(teamBuildingUuid, true);
   const { teamBuildingInfo, teamInfoList, userInfoList } = data ?? {};
   const { mutateAsync: selectUsers } = useSelectUsers();
-  const eventSource = useAtomValue(eventSourceAtom);
 
   const [selectedUsers, setSelectedUsers] = useState<User['uuid'][]>([]); // 현재 라운드에 PM이 선택한 사람
 
@@ -154,50 +147,6 @@ export const Player = ({ teamUuid, teamBuildingUuid }: PlayerProps) => {
     roundStartModalProps.onOpen();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamBuildingInfo?.roundStatus]);
-
-  useEffect(() => {
-    if (!eventSource) return;
-    console.log('ADD EVENT LISTENER');
-
-    const handlePickUser = (e: MessageEvent<string>) => {
-      const data: PickUserEvent = JSON.parse(e.data);
-      console.log('PICK USER: ', data);
-
-      refetch();
-    };
-
-    const handleChangeRound = (e: MessageEvent<Round>) => {
-      console.log('CHANGE ROUND: ', e.data);
-      refetch();
-    };
-
-    const handleDeleteUser = (e: MessageEvent<string>) => {
-      const deletedUserUuid = e.data as DeleteUserEvent;
-      console.log('DELETE USER: ', deletedUserUuid);
-      refetch();
-    };
-
-    const handleAdjustUser = (e: MessageEvent<string>) => {
-      const data: AdjustUserEvent = JSON.parse(e.data);
-      console.log('ADJUST USER: ', data);
-      if (data.joinedTeamUuid === teamUuid)
-        toastWithSound.success(`${data.userName}님이 팀에 배정되었습니다.`);
-      refetch();
-    };
-
-    eventSource?.addEventListener('pick-user', handlePickUser);
-    eventSource?.addEventListener('change-round', handleChangeRound);
-    eventSource.addEventListener('delete-user', handleDeleteUser);
-    eventSource.addEventListener('adjust-user', handleAdjustUser);
-    return () => {
-      console.log('REMOVE EVENT LISTENER');
-      eventSource?.removeEventListener('pick-user', handlePickUser);
-      eventSource?.removeEventListener('change-round', handleChangeRound);
-      eventSource?.removeEventListener('delete-user', handleDeleteUser);
-      eventSource?.removeEventListener('adjust-user', handleAdjustUser);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventSource, refetch, setTotalInfo]);
 
   // @note: 포지션 순서대로 정렬된 유저 리스트
   const sortedUserInfoList = useMemo(() => {

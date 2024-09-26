@@ -1,49 +1,43 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+'use client';
 
-import { useSetAtom } from 'jotai';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useLayoutEffect, useState } from 'react';
 
-import { BASE_URL } from '@/apis/http';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
 import { useGetTotalInfo } from '@/apis/team-building/queries';
 import Spinner from '@/components/Spinner';
 import { useBeforeUnload } from '@/hooks/useBeforeUnload';
-import { eventSourceAtom } from '@/store/atoms';
 import { Team } from '@/types';
-import { resolveUrl } from '@/utils/url';
 
 import NotFound from '../NotFound';
 import { Admin } from './Admin';
 import { Entry } from './Entry';
 import { Player } from './Player';
 
-const TeamBuilding = () => {
+export type TeamBuildingProps = {
+  teamBuildingUuid: string;
+  setShowLottie: (isShow: boolean) => void;
+};
+
+const TeamBuilding = ({
+  teamBuildingUuid,
+  setShowLottie,
+}: TeamBuildingProps) => {
   const [role, setRole] = useState<'admin' | 'player' | null>(null);
   const [teamUuid, setTeamUuid] = useState<Team['uuid'] | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { teamBuildingUuid } = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const { isLoading, data: totalInfo } = useGetTotalInfo(teamBuildingUuid);
-  const setEventSource = useSetAtom(eventSourceAtom);
 
   useLayoutEffect(() => {
-    if (searchParams.get('role') === 'admin') {
+    if (searchParams?.get('role') === 'admin' && pathname) {
       setRole('admin');
-      setSearchParams(undefined, { replace: true });
+      router.replace(pathname);
     }
     // @note: 한번만 실행되어야 함
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    // @note: root component에서 EventSource를 생성하고, atom에 저장한다.
-    const eventSource = new EventSource(
-      resolveUrl(
-        BASE_URL,
-        `notification/team-building/${teamBuildingUuid}/subscribe`,
-      ),
-    );
-    setEventSource(eventSource);
-    return () => eventSource.close();
-  }, [setEventSource, teamBuildingUuid]);
 
   useBeforeUnload(role !== null);
 
@@ -56,6 +50,7 @@ const TeamBuilding = () => {
         teamUuid={teamUuid}
         setRole={setRole}
         setTeamUuid={setTeamUuid}
+        setShowLottie={setShowLottie}
       />
     );
   return role === 'player' && !!teamUuid ? (
