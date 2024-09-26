@@ -175,7 +175,7 @@ export const Card = ({
             objectFit: 'cover',
             borderRadius: '10px',
           })}
-          src={imageUrl[position]}
+          src={imageUrl[position].src}
         />
       </div>
       {selected && (

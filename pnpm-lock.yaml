@@ -23,9 +23,6 @@ importers:
       framer-motion:
         specifier: ^10.16.16
         version: 10.16.16(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      jotai:
-        specifier: ^2.6.0
-        version: 2.6.0(@types/react@18.2.45)(react@18.2.0)
       next:
         specifier: ^14.2.13
         version: 14.2.13(@babel/core@7.23.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2181,18 +2178,6 @@ packages:
   javascript-stringify@2.1.0:
     resolution: {integrity: sha512-JVAfqNPTvNq3sB/VHQJAFxN/sPgKnsKrCwyRt15zwNCdrMMJDdcEOdubuy+DuJYYdm0ox1J4uzEuYKkN+9yhVg==}
 
-  jotai@2.6.0:
-    resolution: {integrity: sha512-Vt6hsc04Km4j03l+Ax+Sc+FVft5cRJhqgxt6GTz6GM2eM3DyX3CdBdzcG0z2FrlZToL1/0OAkqDghIyARWnSuQ==}
-    engines: {node: '>=12.20.0'}
-    peerDependencies:
-      '@types/react': '>=17.0.0'
-      react: '>=17.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      react:
-        optional: true
-
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -2555,10 +2540,6 @@ packages:
 
   postcss@8.4.31:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
-    engines: {node: ^10 || ^12 || >=14}
-
-  postcss@8.4.38:
-    resolution: {integrity: sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==}
     engines: {node: ^10 || ^12 || >=14}
 
   postcss@8.4.47:
@@ -5405,11 +5386,6 @@ snapshots:
 
   javascript-stringify@2.1.0: {}
 
-  jotai@2.6.0(@types/react@18.2.45)(react@18.2.0):
-    optionalDependencies:
-      '@types/react': 18.2.45
-      react: 18.2.0
-
   js-tokens@4.0.0: {}
 
   js-yaml@4.1.0:
@@ -5725,12 +5701,6 @@ snapshots:
       picocolors: 1.0.0
       source-map-js: 1.2.0
 
-  postcss@8.4.38:
-    dependencies:
-      nanoid: 3.3.7
-      picocolors: 1.1.0
-      source-map-js: 1.2.0
-
   postcss@8.4.47:
     dependencies:
       nanoid: 3.3.7
@@ -6044,7 +6014,7 @@ snapshots:
   vite@5.2.8(lightningcss@1.25.1):
     dependencies:
       esbuild: 0.20.2
-      postcss: 8.4.38
+      postcss: 8.4.47
       rollup: 4.14.0
     optionalDependencies:
       fsevents: 2.3.3
