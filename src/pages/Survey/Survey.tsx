@@ -1,6 +1,6 @@
-import { useState } from 'react';
+'use client';
 
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 
 import { useGetTotalInfoForSurvey } from '@/apis/survey/queries';
 import Spinner from '@/components/Spinner';
@@ -11,10 +11,13 @@ import { SurveyForm } from './SurveyForm';
 import { SurveyNotAvailable } from './SurveyNotAvailable';
 import { SurveyResult } from './SurveyResult';
 
-const Survey = () => {
+type SurveyProps = {
+  teamBuildingUuid: string;
+};
+
+const Survey = ({ teamBuildingUuid }: SurveyProps) => {
   const [formResult, setFormResult] = useState<SurveyFormResult>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { teamBuildingUuid } = useParams();
   const { isLoading, data: totalInfoForSurvey } =
     useGetTotalInfoForSurvey(teamBuildingUuid);
 
