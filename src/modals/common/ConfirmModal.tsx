@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import closeIcon from '@/assets/icons/close.svg';
+import CloseIcon from '@/assets/icons/close.svg';
 import { Button } from '@/components/Button';
 import { Modal } from '@/components/Modal';
 import { css } from '@/styled-system/css';
@@ -53,10 +53,7 @@ export const ConfirmModal = ({
             className={css({ cursor: 'pointer' })}
             onClick={onCloseWithSound}
           >
-            <img
-              className={css({ width: '48px', height: '48px' })}
-              src={closeIcon}
-            />
+            <CloseIcon width="48" height="48" />
           </button>
         </header>
 

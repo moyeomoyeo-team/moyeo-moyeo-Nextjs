@@ -3,7 +3,7 @@ import backendImg from '@/assets/icons/character/backend-128.png';
 import designerImg from '@/assets/icons/character/designer-128.png';
 import frontendImg from '@/assets/icons/character/frontend-128.png';
 import iosImg from '@/assets/icons/character/ios-128.png';
-import checkIcon from '@/assets/icons/check.svg';
+import CheckIcon from '@/assets/icons/check.svg';
 import LinkIcon from '@/assets/icons/link.svg';
 import NoLinkIcon from '@/assets/icons/noLink.svg';
 import { css, cva, cx } from '@/styled-system/css';
@@ -190,14 +190,7 @@ export const Card = ({
             borderRadius: '20px',
           })}
         >
-          <img
-            className={css({
-              width: '40px',
-              height: '40px',
-              objectFit: 'cover',
-            })}
-            src={checkIcon}
-          />
+          <CheckIcon width="40" height="40" />
         </div>
       )}
     </button>
