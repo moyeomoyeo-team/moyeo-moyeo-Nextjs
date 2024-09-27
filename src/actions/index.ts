@@ -38,18 +38,11 @@ export const getTotalInfoAction = async (
   payload: API['getTotalInfo']['request'],
 ) => {
   const supabase = createSupabaseClient();
-  const teamBuilding = await getTeamBuilding(
-    supabase,
-    payload.teamBuildingUuid,
-  );
-  const teams = await getTeamsByTeamBuildingId(
-    supabase,
-    payload.teamBuildingUuid,
-  );
-  const users = await getUsersByTeamBuildingId(
-    supabase,
-    payload.teamBuildingUuid,
-  );
+  const [teamBuilding, teams, users] = await Promise.all([
+    getTeamBuilding(supabase, payload.teamBuildingUuid),
+    getTeamsByTeamBuildingId(supabase, payload.teamBuildingUuid),
+    getUsersByTeamBuildingId(supabase, payload.teamBuildingUuid),
+  ]);
 
   return {
     teamBuildingInfo: toTeamBuildingInfo(teamBuilding),
@@ -197,14 +190,10 @@ export const getTotalInfoForSurveyAction = async (
   payload: API['getTotalInfoForSurvey']['request'],
 ) => {
   const supabase = createSupabaseClient();
-  const teamBuilding = await getTeamBuilding(
-    supabase,
-    payload.teamBuildingUuid,
-  );
-  const teams = await getTeamsByTeamBuildingId(
-    supabase,
-    payload.teamBuildingUuid,
-  );
+  const [teamBuilding, teams] = await Promise.all([
+    getTeamBuilding(supabase, payload.teamBuildingUuid),
+    getTeamsByTeamBuildingId(supabase, payload.teamBuildingUuid),
+  ]);
   return {
     teamBuildingInfo: toTeamBuildingInfo(teamBuilding),
     teamInfoList: teams.map((team) =>
