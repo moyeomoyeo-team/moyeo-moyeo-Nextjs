@@ -61,7 +61,14 @@ export const ConfirmModal = ({
           {content}
         </p>
 
-        <Button color="primary" size="medium" onClick={onConfirm}>
+        <Button
+          color="primary"
+          size="medium"
+          onClick={() => {
+            onConfirm();
+            onClose();
+          }}
+        >
           {confirmButtonText}
         </Button>
       </section>
