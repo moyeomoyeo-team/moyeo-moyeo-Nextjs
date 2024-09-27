@@ -5,6 +5,7 @@ import {
   createTeamBuildingAction,
   deleteUserAction,
   finishTeamBuildingAction,
+  moveToNextRoundAction,
   startTeamBuildingAction,
 } from '@/actions';
 
@@ -28,6 +29,17 @@ export const useStartTeamBuilding = () => {
   return useMutation<Response, unknown, Request>({
     mutationFn: async (payload) => {
       return await startTeamBuildingAction(payload);
+    },
+  });
+};
+
+export const useMoveToNextRound = () => {
+  type Response = API['moveToNextRound']['response'];
+  type Request = API['moveToNextRound']['request'];
+
+  return useMutation<Response, unknown, Request>({
+    mutationFn: async (payload) => {
+      return await moveToNextRoundAction(payload);
     },
   });
 };

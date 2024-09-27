@@ -1,4 +1,4 @@
-import { Position, TotalInfo, User } from '@/types';
+import { Position, Round, TotalInfo, User } from '@/types';
 
 export type API = {
   // === 팀 빌딩 ===
@@ -64,6 +64,13 @@ export type API = {
   startTeamBuilding: {
     request: {
       teamBuildingUuid: string;
+    };
+    response: unknown;
+  };
+  moveToNextRound: {
+    request: {
+      teamBuildingUuid: string;
+      nextRound: Round;
     };
     response: unknown;
   };

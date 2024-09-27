@@ -1,6 +1,7 @@
 'use server';
 
 import { type API } from '@/apis/type';
+import { getNextRound } from '@/utils/round';
 
 import { SupabaseClient, createSupabaseClient } from './supabase';
 import { toTeamBuildingInfo, toTeamInfo, toUserInfo } from './transform';
@@ -14,24 +15,6 @@ enum RoundStatus {
   ADJUSTED_ROUND = 'ADJUSTED_ROUND',
   COMPLETE = 'COMPLETE',
 }
-const getNextRoundStatus = (roundStatus: string) => {
-  switch (roundStatus) {
-    case RoundStatus.START:
-      return RoundStatus.FIRST_ROUND;
-    case RoundStatus.FIRST_ROUND:
-      return RoundStatus.SECOND_ROUND;
-    case RoundStatus.SECOND_ROUND:
-      return RoundStatus.THIRD_ROUND;
-    case RoundStatus.THIRD_ROUND:
-      return RoundStatus.FOURTH_ROUND;
-    case RoundStatus.FOURTH_ROUND:
-      return RoundStatus.ADJUSTED_ROUND;
-    case RoundStatus.ADJUSTED_ROUND:
-      return RoundStatus.COMPLETE;
-    default:
-      throw new Error('Invalid round status');
-  }
-};
 
 // GetTotalInfo
 export const getTotalInfoAction = async (
@@ -76,7 +59,7 @@ export const selectUsersAction = async (
     .select('*, user_choice (*)');
   if (errorInUser) throw errorInUser;
 
-  const nextRound = getNextRoundStatus(currentRound);
+  const nextRound = getNextRound(currentRound);
   const { error: errorInTeam } = await supabase
     .from('team')
     .update({
@@ -131,16 +114,24 @@ export const startTeamBuildingAction = async (
 // MoveToNextRound
 // - 팀 빌딩 정보의 round_status를 다음 라운드로 변경
 // TODO: admin 페이지에 연동 필요
-export const moveToNextRoundAction = async (teamBuildingId: string) => {
+export const moveToNextRoundAction = async (
+  payload: API['moveToNextRound']['request'],
+) => {
   const supabase = createSupabaseClient();
-  const teamBuilding = await getTeamBuilding(supabase, teamBuildingId);
-  const currentRound = getNextRoundStatus(teamBuilding.round_status);
+  const teamBuilding = await getTeamBuilding(
+    supabase,
+    payload.teamBuildingUuid,
+  );
+  const nextRound = getNextRound(teamBuilding.round_status);
+
+  if (nextRound !== payload.nextRound) throw new Error('Invalid next round');
+
   const { error } = await supabase
     .from('team_building')
     .update({
-      round_status: currentRound,
+      round_status: nextRound,
     })
-    .eq('id', teamBuildingId);
+    .eq('id', payload.teamBuildingUuid);
   if (error) throw error;
 };
 

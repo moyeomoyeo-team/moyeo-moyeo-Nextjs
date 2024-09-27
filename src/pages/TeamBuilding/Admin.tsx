@@ -7,6 +7,7 @@ import {
   useAdjustUser,
   useDeleteUser,
   useFinishTeamBuilding,
+  useMoveToNextRound,
   useStartTeamBuilding,
 } from '@/apis/admin/mutations';
 import { useGetTotalInfo } from '@/apis/team-building/queries';
@@ -29,6 +30,7 @@ import { Team, User } from '@/types';
 import { POSITION, ROUND_INDEX_MAP, ROUND_LABEL_MAP } from '@/utils/const';
 import { downloadTsv } from '@/utils/file';
 import { toLocaleString } from '@/utils/format';
+import { getNextRound } from '@/utils/round';
 import { playSound } from '@/utils/sound';
 import { toastWithSound } from '@/utils/toast';
 
@@ -79,12 +81,18 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
     useStartTeamBuilding();
   const { mutate: finishTeamBuilding, isPending: isLoadingToFinish } =
     useFinishTeamBuilding();
+  const { mutate: moveToNextRound, isPending: isLoadingToNextRound } =
+    useMoveToNextRound();
 
   const activeStep =
     ROUND_INDEX_MAP[teamBuildingInfo?.roundStatus ?? 'FIRST_ROUND'];
   const processValue = (teamInfoList ?? []).reduce(
     (acc, team) => (acc += team.selectDone ? 1 : 0),
     0,
+  );
+  const isAllTeamsSelectDone = useMemo(
+    () => teamInfoList?.every((team) => team.selectDone) ?? false,
+    [teamInfoList],
   );
   const isFinishedTeamBuilding = teamBuildingInfo?.roundStatus === 'COMPLETE';
   const isDisabledFinishTeamBuildingButton = useMemo(() => {
@@ -307,6 +315,49 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
     );
   };
 
+  const handleClickMoveToNextRound = () => {
+    if (!teamBuildingInfo) return;
+
+    const nextRound = getNextRound(teamBuildingInfo.roundStatus);
+
+    moveToNextRound(
+      {
+        teamBuildingUuid,
+        nextRound,
+      },
+      {
+        onSuccess: () => {
+          // @note: refetch 되기 전까지 disabled 되어있도록 먼저 반영
+          setTotalInfo((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              teamBuildingInfo: {
+                ...prev.teamBuildingInfo,
+                roundStatus: nextRound,
+              },
+              teamInfoList: prev.teamInfoList.map((team) => {
+                if (team.selectDone) {
+                  return {
+                    ...team,
+                    selectDone: false,
+                  };
+                }
+                return team;
+              }),
+            };
+          });
+          refetchTotalInfo();
+        },
+        onError: () => {
+          toastWithSound.error(
+            '다음 라운드로 이동하는데 실패했습니다. 잠시 후 다시 시도해주세요.',
+          );
+        },
+      },
+    );
+  };
+
   const handleClickFinishTeamBuilding = () => {
     finishTeamBuilding(
       {
@@ -510,6 +561,73 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
           }
         }}
       />
+    );
+  };
+
+  const renderCTAButton = () => {
+    if (!teamBuildingInfo) return null;
+
+    if (teamBuildingInfo.roundStatus === 'START') {
+      return (
+        <Button
+          size="medium"
+          color="primary"
+          disabled={isLoadingToStart}
+          onClick={startConfirmModalProps.onOpen}
+          className={css({
+            width: '320px !important',
+          })}
+        >
+          {isLoadingToStart ? '시작하고 있습니다...' : '팀 빌딩 시작하기'}
+        </Button>
+      );
+    }
+
+    if (
+      teamBuildingInfo.roundStatus === 'ADJUSTED_ROUND' ||
+      teamBuildingInfo.roundStatus === 'COMPLETE'
+    ) {
+      return (
+        <Button
+          size="medium"
+          color="primary"
+          title={
+            !isFinishedTeamBuilding && isDisabledFinishTeamBuildingButton
+              ? '팀 구성 조정 라운드에서 모든 팀에 인원 배정이 완료되어야 종료할 수 있습니다.'
+              : undefined
+          }
+          disabled={isLoadingToFinish || isDisabledFinishTeamBuildingButton}
+          onClick={finishConfirmModalProps.onOpen}
+          className={css({
+            width: '320px !important',
+          })}
+        >
+          {isFinishedTeamBuilding
+            ? '팀 빌딩이 완료되었습니다'
+            : '팀 빌딩 마치기'}
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        size="medium"
+        color="primary"
+        title={
+          !isAllTeamsSelectDone
+            ? '모든 팀이 선택을 마쳐야 다음 라운드로 넘어갈 수 있습니다.'
+            : undefined
+        }
+        disabled={isLoadingToNextRound || !isAllTeamsSelectDone}
+        onClick={handleClickMoveToNextRound}
+        className={css({
+          width: '320px !important',
+        })}
+      >
+        {isLoadingToNextRound
+          ? '다음 라운드로 넘어가는 중...'
+          : '이번 라운드 마치기'}
+      </Button>
     );
   };
 
@@ -808,41 +926,7 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
           </section>
 
           <section className={css({ width: '100%', textAlign: 'right' })}>
-            {teamBuildingInfo?.roundStatus === 'START' && (
-              <Button
-                size="medium"
-                color="primary"
-                disabled={isLoadingToStart}
-                onClick={startConfirmModalProps.onOpen}
-                className={css({
-                  width: '320px !important',
-                })}
-              >
-                {isLoadingToStart ? '시작하고 있습니다...' : '팀 빌딩 시작하기'}
-              </Button>
-            )}
-            {teamBuildingInfo?.roundStatus !== 'START' && (
-              <Button
-                size="medium"
-                color="primary"
-                title={
-                  !isFinishedTeamBuilding && isDisabledFinishTeamBuildingButton
-                    ? '팀 구성 조정 라운드에서 모든 팀에 인원 배정이 완료되어야 종료할 수 있습니다.'
-                    : undefined
-                }
-                disabled={
-                  isLoadingToFinish || isDisabledFinishTeamBuildingButton
-                }
-                onClick={finishConfirmModalProps.onOpen}
-                className={css({
-                  width: '320px !important',
-                })}
-              >
-                {isFinishedTeamBuilding
-                  ? '팀 빌딩이 완료되었습니다'
-                  : '팀 빌딩 마치기'}
-              </Button>
-            )}
+            {renderCTAButton()}
           </section>
         </section>
       </section>
