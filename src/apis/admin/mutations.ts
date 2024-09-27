@@ -1,81 +1,66 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { httpClient } from '../http';
+import {
+  adjustUserAction,
+  createTeamBuildingAction,
+  deleteUserAction,
+  finishTeamBuildingAction,
+  startTeamBuildingAction,
+} from '@/actions';
+
 import { API } from '../type';
 
 export const useCreateTeamBuilding = () => {
   type Response = API['createTeamBuilding']['response'];
-  type RequestBody = API['createTeamBuilding']['request']['body'];
+  type Request = API['createTeamBuilding']['request'];
 
-  return useMutation({
-    mutationFn: async ({ body }: API['createTeamBuilding']['request']) => {
-      return await httpClient.post<Response, RequestBody>(
-        `/api/admin/team-building`,
-        body,
-      );
+  return useMutation<Response, unknown, Request>({
+    mutationFn: async (payload) => {
+      return await createTeamBuildingAction(payload);
     },
   });
 };
 
 export const useStartTeamBuilding = () => {
   type Response = API['startTeamBuilding']['response'];
+  type Request = API['startTeamBuilding']['request'];
 
-  return useMutation({
-    mutationFn: async ({
-      teamBuildingUuid,
-    }: API['startTeamBuilding']['request']) => {
-      return await httpClient.put<Response, void>(
-        `/api/admin/team-building/${teamBuildingUuid}/start`,
-        undefined,
-      );
+  return useMutation<Response, unknown, Request>({
+    mutationFn: async (payload) => {
+      return await startTeamBuildingAction(payload);
     },
   });
 };
 
 export const useAdjustUser = () => {
   type Response = API['adjustUser']['response'];
-  type RequestBody = API['adjustUser']['request']['body'];
+  type Request = API['adjustUser']['request'];
 
-  return useMutation({
-    mutationFn: async ({
-      teamBuildingUuid,
-      userUuid,
-      body,
-    }: API['adjustUser']['request']) => {
-      return await httpClient.post<Response, RequestBody>(
-        `/api/admin/team-building/${teamBuildingUuid}/users/${userUuid}`,
-        body,
-      );
+  return useMutation<Response, unknown, Request>({
+    mutationFn: async (payload) => {
+      return await adjustUserAction(payload);
     },
   });
 };
 
 export const useDeleteUser = () => {
   type Response = API['deleteUser']['response'];
+  type Request = API['deleteUser']['request'];
 
-  return useMutation({
-    mutationFn: async ({
-      teamBuildingUuid,
-      userUuid,
-    }: API['deleteUser']['request']) => {
-      return await httpClient.delete<Response>(
-        `/api/admin/team-building/${teamBuildingUuid}/users/${userUuid}`,
-      );
+  return useMutation<Response, unknown, Request>({
+    mutationFn: async (payload) => {
+      return await deleteUserAction(payload);
     },
   });
 };
 
 export const useFinishTeamBuilding = () => {
   type Response = API['finishTeamBuilding']['response'];
+  type Request = API['finishTeamBuilding']['request'];
 
-  return useMutation({
-    mutationFn: async ({
-      teamBuildingUuid,
-    }: API['finishTeamBuilding']['request']) => {
-      return await httpClient.put<Response, void>(
-        `/api/admin/team-building/${teamBuildingUuid}/finish`,
-        undefined,
-      );
+  return useMutation<Response, unknown, Request>({
+    mutationFn: async (payload) => {
+      return await finishTeamBuildingAction(payload);
     },
   });
 };

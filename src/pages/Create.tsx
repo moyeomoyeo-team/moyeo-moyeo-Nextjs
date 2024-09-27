@@ -115,7 +115,7 @@ const Create = () => {
           },
         },
         {
-          onSuccess: ({ teamBuildingInfo }) => {
+          onSuccess: (teamBuildingInfo) => {
             router.push(`/${teamBuildingInfo.teamBuildingUrl}?role=admin`);
             playSound('페이지_전환');
           },

@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -30,7 +30,7 @@ const TeamBuilding = ({
   const pathname = usePathname();
   const { isLoading, data: totalInfo } = useGetTotalInfo(teamBuildingUuid);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (searchParams?.get('role') === 'admin' && pathname) {
       setRole('admin');
       router.replace(pathname);

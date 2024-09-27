@@ -58,7 +58,7 @@ export type API = {
         }[];
       };
     };
-    response: TotalInfo;
+    response: TotalInfo['teamBuildingInfo'];
   };
   // 팀 빌딩 시작
   startTeamBuilding: {

@@ -1,3 +1,5 @@
+'use client';
+
 import CommonLayout from '@/layouts/CommonLayout';
 import HomePage from '@/pages/Home';
 

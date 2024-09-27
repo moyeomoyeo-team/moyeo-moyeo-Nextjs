@@ -1,22 +1,16 @@
-import { useMutation } from '@tanstack/react-query';
+import { DefaultError, useMutation } from '@tanstack/react-query';
 
-import { httpClient } from '../http';
+import { selectUsersAction } from '@/actions';
+
 import { API } from '../type';
 
 export const useSelectUsers = () => {
-  type RequestBody = API['selectUsers']['request']['body'];
+  type Request = API['selectUsers']['request'];
   type Response = API['selectUsers']['response'];
 
-  return useMutation({
-    mutationFn: async ({
-      teamBuildingUuid,
-      teamUuid,
-      body,
-    }: API['selectUsers']['request']) => {
-      return await httpClient.post<Response, RequestBody>(
-        `/api/team-building/${teamBuildingUuid}/teams/${teamUuid}/users`,
-        body,
-      );
+  return useMutation<Response, DefaultError, Request>({
+    mutationFn: async (payload) => {
+      return await selectUsersAction(payload);
     },
   });
 };

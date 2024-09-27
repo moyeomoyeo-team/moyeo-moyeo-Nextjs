@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { httpClient } from '../http';
+import { getTotalInfoForSurveyAction } from '@/actions';
+
 import { API } from '../type';
 
 export const useGetTotalInfoForSurvey = (
@@ -8,13 +9,11 @@ export const useGetTotalInfoForSurvey = (
 ) => {
   type Response = API['getTotalInfoForSurvey']['response'];
 
-  return useQuery({
+  return useQuery<Response>({
     queryKey: ['survey', teamBuildingUuid],
     queryFn: async () => {
       if (!teamBuildingUuid) throw 'teamBuildingUuid is undefined';
-      return await httpClient.get<Response>(
-        `/api/surveys/team-building/${teamBuildingUuid}/teams`,
-      );
+      return await getTotalInfoForSurveyAction({ teamBuildingUuid });
     },
     enabled: !!teamBuildingUuid,
   });

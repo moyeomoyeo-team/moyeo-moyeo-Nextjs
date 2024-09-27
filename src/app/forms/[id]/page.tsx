@@ -1,3 +1,5 @@
+'use client';
+
 import MobileLayout from '@/layouts/MobileLayout';
 import SurveyPage from '@/pages/Survey';
 
