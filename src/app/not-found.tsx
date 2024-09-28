@@ -1,5 +1,5 @@
 import CommonLayout from '@/layouts/CommonLayout';
-import NotFoundPage from '@/pages/NotFound';
+import NotFoundPage from '@/screens/NotFound';
 
 export default function Page() {
   return (

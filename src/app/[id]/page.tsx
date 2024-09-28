@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import CommonLayout from '@/layouts/CommonLayout';
-import TeamBuildingPage from '@/pages/TeamBuilding';
+import TeamBuildingPage from '@/screens/TeamBuilding';
 
 type Props = {
   params: { id: string };

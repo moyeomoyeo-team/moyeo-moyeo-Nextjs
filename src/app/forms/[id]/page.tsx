@@ -1,7 +1,7 @@
 'use client';
 
 import MobileLayout from '@/layouts/MobileLayout';
-import SurveyPage from '@/pages/Survey';
+import SurveyPage from '@/screens/Survey';
 
 type Props = {
   params: { id: string };
