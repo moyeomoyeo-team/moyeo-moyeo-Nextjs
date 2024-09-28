@@ -323,7 +323,7 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
     moveToNextRound(
       {
         teamBuildingUuid,
-        nextRound,
+        body: { nextRound },
       },
       {
         onSuccess: () => {

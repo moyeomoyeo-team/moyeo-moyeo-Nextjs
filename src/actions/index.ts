@@ -1,5 +1,3 @@
-'use server';
-
 import { type API } from '@/apis/type';
 import { getNextRound } from '@/utils/round';
 
@@ -113,7 +111,6 @@ export const startTeamBuildingAction = async (
 
 // MoveToNextRound
 // - 팀 빌딩 정보의 round_status를 다음 라운드로 변경
-// TODO: admin 페이지에 연동 필요
 export const moveToNextRoundAction = async (
   payload: API['moveToNextRound']['request'],
 ) => {
@@ -124,7 +121,8 @@ export const moveToNextRoundAction = async (
   );
   const nextRound = getNextRound(teamBuilding.round_status);
 
-  if (nextRound !== payload.nextRound) throw new Error('Invalid next round');
+  if (nextRound !== payload.body.nextRound)
+    throw new Error('Invalid next round');
 
   const { error } = await supabase
     .from('team_building')

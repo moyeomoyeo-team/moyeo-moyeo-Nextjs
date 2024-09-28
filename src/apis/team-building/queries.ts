@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { Updater, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { getTotalInfoAction } from '@/actions';
+import { httpClient } from '@/apis/http';
 import { type API } from '@/apis/type';
 
 export const useGetTotalInfo = (
@@ -23,12 +23,14 @@ export const useGetTotalInfo = (
     [queryClient, teamBuildingUuid],
   );
 
-  const queryResult = useQuery<Response>({
+  const queryResult = useQuery({
     queryKey: ['totalInfo', teamBuildingUuid],
     queryFn: async () => {
       if (!teamBuildingUuid) throw new Error('teamBuildingUuid is required');
 
-      const data = await getTotalInfoAction({ teamBuildingUuid });
+      const data = await httpClient.get<Response>(
+        `/api/team-building/${teamBuildingUuid}`,
+      );
       // @fixme: 제거할 것
       console.log(data);
       return data;

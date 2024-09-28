@@ -70,7 +70,9 @@ export type API = {
   moveToNextRound: {
     request: {
       teamBuildingUuid: string;
-      nextRound: Round;
+      body: {
+        nextRound: Round;
+      };
     };
     response: unknown;
   };

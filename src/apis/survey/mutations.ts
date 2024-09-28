@@ -1,16 +1,21 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { createUserAction } from '@/actions';
-
+import { httpClient } from '../http';
 import { API } from '../type';
 
 export const useCreateUser = () => {
   type Response = API['createUser']['response'];
-  type Request = API['createUser']['request'];
+  type RequestBody = API['createUser']['request']['body'];
 
-  return useMutation<Response, unknown, Request>({
-    mutationFn: async (payload) => {
-      return await createUserAction(payload);
+  return useMutation({
+    mutationFn: async ({
+      teamBuildingUuid,
+      body,
+    }: API['createUser']['request']) => {
+      return await httpClient.post<Response, RequestBody>(
+        `/api/surveys/team-building/${teamBuildingUuid}/users`,
+        body,
+      );
     },
   });
 };
