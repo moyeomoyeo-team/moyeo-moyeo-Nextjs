@@ -34,7 +34,10 @@ export const toUserInfo = (
     uuid: data.id,
     userName: data.name,
     position: data.position as Position,
-    choices: data.user_choice.map((choice) => choice.team_id).filter(isNotNull),
+    choices: data.user_choice
+      .sort((a, b) => a.choice_order - b.choice_order)
+      .map((choice) => choice.team_id)
+      .filter(isNotNull),
     joinedTeamUuid: data.team_id,
     profileLink: data.profile_link,
     selectedRound: data.selected_round as Round,
