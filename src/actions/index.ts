@@ -52,6 +52,7 @@ export const selectUsersAction = async (
         team_id: payload.teamUuid,
         team_building_id: payload.teamBuildingUuid,
         selected_round: currentRound,
+        updated_at: new Date().toISOString(),
       })),
     )
     .select('*, user_choice (*)');
@@ -62,6 +63,7 @@ export const selectUsersAction = async (
     .from('team')
     .update({
       round_status: nextRound,
+      updated_at: new Date().toISOString(),
     })
     .eq('id', payload.teamUuid);
   if (errorInTeam) throw errorInTeam;
@@ -96,7 +98,10 @@ export const startTeamBuildingAction = async (
   const supabase = createSupabaseClient();
   const { error: errorInTeamBuilding } = await supabase
     .from('team_building')
-    .update({ round_status: RoundStatus.FIRST_ROUND })
+    .update({
+      round_status: RoundStatus.FIRST_ROUND,
+      updated_at: new Date().toISOString(),
+    })
     .eq('id', payload.teamBuildingUuid);
   if (errorInTeamBuilding) throw errorInTeamBuilding;
 
@@ -104,6 +109,7 @@ export const startTeamBuildingAction = async (
     .from('team')
     .update({
       round_status: RoundStatus.FIRST_ROUND,
+      updated_at: new Date().toISOString(),
     })
     .eq('team_building_id', payload.teamBuildingUuid);
   if (errorInTeam) throw errorInTeam;
@@ -128,6 +134,7 @@ export const moveToNextRoundAction = async (
     .from('team_building')
     .update({
       round_status: nextRound,
+      updated_at: new Date().toISOString(),
     })
     .eq('id', payload.teamBuildingUuid);
   if (error) throw error;
@@ -140,7 +147,10 @@ export const finishTeamBuildingAction = async (
   const supabase = createSupabaseClient();
   const { error } = await supabase
     .from('team_building')
-    .update({ round_status: RoundStatus.COMPLETE })
+    .update({
+      round_status: RoundStatus.COMPLETE,
+      updated_at: new Date().toISOString(),
+    })
     .eq('id', payload.teamBuildingUuid);
   if (error) throw error;
 };
@@ -155,6 +165,7 @@ export const adjustUserAction = async (
     .update({
       team_id: payload.body.teamUuid,
       selected_round: RoundStatus.ADJUSTED_ROUND,
+      updated_at: new Date().toISOString(),
     })
     .eq('id', payload.userUuid)
     .select('*, user_choice (*)');
