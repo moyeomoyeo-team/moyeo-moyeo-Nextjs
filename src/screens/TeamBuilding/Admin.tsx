@@ -1,6 +1,5 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 
-import toast from 'react-hot-toast';
 import { Tooltip } from 'react-tooltip';
 
 import {
@@ -27,12 +26,13 @@ import { ConfirmModal } from '@/modals/common/ConfirmModal';
 import { css } from '@/styled-system/css';
 import { center, hstack, stack, vstack } from '@/styled-system/patterns';
 import { Team, User } from '@/types';
-import { POSITION, ROUND_INDEX_MAP, ROUND_LABEL_MAP } from '@/utils/const';
+import { POSITION, ROUND_INDEX_MAP } from '@/utils/const';
 import { downloadTsv } from '@/utils/file';
 import { toLocaleString } from '@/utils/format';
 import { getNextRound } from '@/utils/round';
-import { playSound } from '@/utils/sound';
 import { toastWithSound } from '@/utils/toast';
+
+import { useTotalInfoNotification } from '../../hooks/useTotalInfoNotification';
 
 const ROUNDS = [
   {
@@ -74,6 +74,7 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
     setTotalInfo,
   } = useGetTotalInfo(teamBuildingUuid, true);
   const { teamBuildingInfo, teamInfoList, userInfoList } = totalInfo ?? {};
+  useTotalInfoNotification(totalInfo);
 
   const { mutate: adjustUser } = useAdjustUser();
   const { mutate: deleteUser } = useDeleteUser();
@@ -393,87 +394,6 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
     sessionStorage.setItem('showAdminGuide', 'true');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    // @note: 라운드 변경에 대한 이벤트 감지가 안되는 경우, 토스트가 안뜰 수 있어
-    // 별도의 effect 훅으로 토스트를 띄운다.
-    const roundStatus = teamBuildingInfo?.roundStatus ?? 'FIRST_ROUND';
-
-    if (roundStatus === 'START') {
-      playSound('라운드_변경');
-      toast.success('모든 준비가 완료되면 팀 빌딩을 시작해주세요.');
-    } else if (roundStatus === 'COMPLETE') {
-      playSound('팀빌딩_완료');
-      toast.success('팀 빌딩이 완료되었습니다.');
-    } else {
-      playSound('라운드_변경');
-      toast.success(`${ROUND_LABEL_MAP[roundStatus]} 라운드가 시작되었습니다.`);
-    }
-  }, [teamBuildingInfo?.roundStatus]);
-
-  //   if (!eventSource) return;
-
-  //   const handleChangeRound = (e: MessageEvent<string>) => {
-  //     const data: ChangeRoundEvent = JSON.parse(e.data);
-  //     console.log('change round', data);
-
-  //     // @note: 라운드 변경시 초기화가 필요해서 refetch로 대체
-  //     refetchTotalInfo();
-  //   };
-
-  //   const handlePickUser = (e: MessageEvent<string>) => {
-  //     const data: PickUserEvent = JSON.parse(e.data);
-  //     console.log('pick user', data);
-
-  //     // @note: 선택된 라운드 표시를 서버에서 가져오기 위해 refetch
-  //     refetchTotalInfo();
-  //     toastWithSound.success(`${data.teamName}팀이 팀원 선택을 완료했습니다.`);
-  //   };
-
-  //   const handleCreateUser = (e: MessageEvent<string>) => {
-  //     const data: CreateUserEvent = JSON.parse(e.data);
-  //     console.log('create user', data);
-
-  //     // @note: refetch 대신 쿼리 클라이언트 수정
-  //     setTotalInfo((prev) => {
-  //       if (!prev) return prev;
-  //       return {
-  //         ...prev,
-  //         userInfoList: [...prev.userInfoList, data],
-  //       };
-  //     });
-  //     toastWithSound.success(
-  //       `${data.userName}님의 설문 응답이 등록되었습니다.`,
-  //     );
-  //   };
-
-  //   const handleDeleteUser = (e: MessageEvent<string>) => {
-  //     const deletedUserUuid = e.data as DeleteUserEvent;
-  //     console.log('delete user', deletedUserUuid);
-  //     // 자신이 삭제하지 않은 경우도 있을 수 있어 일단 refetch만
-  //     refetchTotalInfo();
-  //   };
-  //   const handleAdjustUser = (e: MessageEvent<string>) => {
-  //     const data: AdjustUserEvent = JSON.parse(e.data);
-  //     console.log('adjust user', data);
-  //     // 자신이 조정하지 않은 경우도 있을 수 있어 일단 refetch만
-  //     refetchTotalInfo();
-  //   };
-
-  //   eventSource.addEventListener('create-user', handleCreateUser);
-  //   eventSource.addEventListener('pick-user', handlePickUser);
-  //   eventSource.addEventListener('change-round', handleChangeRound);
-  //   eventSource.addEventListener('delete-user', handleDeleteUser);
-  //   eventSource.addEventListener('adjust-user', handleAdjustUser);
-
-  //   return () => {
-  //     eventSource.removeEventListener('create-user', handleCreateUser);
-  //     eventSource.removeEventListener('pick-user', handlePickUser);
-  //     eventSource.removeEventListener('change-round', handleChangeRound);
-  //     eventSource.removeEventListener('delete-user', handleDeleteUser);
-  //     eventSource.removeEventListener('adjust-user', handleAdjustUser);
-  //   };
-  // }, [eventSource, refetchTotalInfo, setTotalInfo]);
 
   const renderTeamTitle = (teamUuid: Team['uuid']) => {
     const team = teamInfoList?.find((team) => team.uuid === teamUuid);
