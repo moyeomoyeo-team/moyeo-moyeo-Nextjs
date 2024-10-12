@@ -36,7 +36,7 @@ export const useGetTotalInfo = (
       return data;
     },
     enabled: !!teamBuildingUuid,
-    refetchInterval: polling ? 10000 : false,
+    refetchInterval: polling ? 5_000 : false,
     refetchIntervalInBackground: polling,
   });
 
