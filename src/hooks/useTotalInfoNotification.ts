@@ -1,22 +1,22 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import toast from 'react-hot-toast';
-import { ReplaySubject, bufferCount } from 'rxjs';
 
 import { Round, Team, TotalInfo, User } from '@/types';
 import { ROUND_LABEL_MAP } from '@/utils/const';
 import { playSound } from '@/utils/sound';
 import { toastWithSound } from '@/utils/toast';
 
+import { usePrevious } from './usePrevious';
+
 export const useTotalInfoNotification = (totalInfo?: TotalInfo) => {
-  const subjectRef = useRef(new ReplaySubject<TotalInfo>(1));
+  const prevTotalInfo = usePrevious(totalInfo);
 
   useEffect(() => {
-    if (!totalInfo) return;
-    subjectRef.current.next(totalInfo);
-  }, [totalInfo]);
+    const prev = prevTotalInfo;
+    const current = totalInfo;
+    if (!prev || !current) return;
 
-  useEffect(() => {
     const toastAboutChangeRound = (roundStatus: Round) => {
       if (roundStatus === 'START') {
         playSound('라운드_변경');
@@ -66,27 +66,23 @@ export const useTotalInfoNotification = (totalInfo?: TotalInfo) => {
       );
     };
 
-    const subscription = subjectRef.current
-      .pipe(bufferCount(2, 1))
-      .subscribe(([prev, current]) => {
-        const roundStatusChanged =
-          prev.teamBuildingInfo.roundStatus !==
-          current.teamBuildingInfo.roundStatus;
+    const roundStatusChanged =
+      prev.teamBuildingInfo.roundStatus !==
+      current.teamBuildingInfo.roundStatus;
 
-        if (roundStatusChanged) {
-          toastAboutChangeRound(current.teamBuildingInfo?.roundStatus);
-          return;
-        }
+    if (roundStatusChanged) {
+      toastAboutChangeRound(current.teamBuildingInfo?.roundStatus);
+      return;
+    }
 
-        // 선택 완료한 팀이 있는 경우
-        toastAboutSelectDone(prev.teamInfoList, current.teamInfoList);
+    // 선택 완료한 팀이 있는 경우
+    if (current.teamBuildingInfo.roundStatus !== 'COMPLETE') {
+      toastAboutSelectDone(prev.teamInfoList, current.teamInfoList);
+    }
 
-        // 설문 응답 완료한 경우
-        toastAboutSurveyDone(prev.userInfoList, current.userInfoList);
-      });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+    // 설문 응답 완료한 경우
+    if (current.teamBuildingInfo.roundStatus === 'START') {
+      toastAboutSurveyDone(prev.userInfoList, current.userInfoList);
+    }
+  }, [prevTotalInfo, totalInfo]);
 };
