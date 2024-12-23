@@ -234,6 +234,16 @@ export const createUserAction = async (
   return toUserInfo({ ...user, user_choice: userChoice });
 };
 
+// heathCheck
+export const healthCheckAction = async () => {
+  const supabase = createSupabaseClient();
+  const { count, error } = await supabase
+    .from('team_building')
+    .select('id', { count: 'estimated' });
+  if (error) throw error;
+  return { count };
+};
+
 /// Helper functions
 
 const getTeamBuilding = async (supabase: SupabaseClient, id: string) => {

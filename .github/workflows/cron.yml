@@ -1,0 +1,15 @@
+name: Call health check API
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 매 정각(UTC 기준)에 실행
+    - cron: '0 * * * *'
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          # supabase 가 휴먼 상태로 전환되지 않도록 합니다
+          curl -X GET "https://moyeomoyeo.vercel.app/api/health"
