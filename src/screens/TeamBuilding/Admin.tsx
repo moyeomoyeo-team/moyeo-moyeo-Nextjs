@@ -165,11 +165,11 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
         '직군',
         '선택된 팀',
         '선택된 라운드',
+        '설문제출시간',
         '1지망',
         '2지망',
         '3지망',
         '4지망',
-        '설문제출시간',
       ],
       // @note: allMemberByTeam를 사용하면 pm 정보도 자연스럽게 같이 들어가게 된다
       ...allMemberByTeam.flatMap(([teamUuid, members]) => {
@@ -179,8 +179,8 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
           POSITION[member.position],
           teamNameMap[teamUuid] || '-',
           member.selectedRound || '-',
-          ...member.choices.map((choice) => teamNameMap[choice] || '-'),
           toLocaleString(member.createdDate),
+          ...member.choices.map((choice) => teamNameMap[choice] || '-'),
         ]);
       }),
     ];

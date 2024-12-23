@@ -222,7 +222,7 @@ export const createUserAction = async (
   const { data: userChoice, error: errorInUserChoice } = await supabase
     .from('user_choice')
     .insert(
-      payload.body.choices.map((choice, order) => ({
+      payload.body.choices.filter(Boolean).map((choice, order) => ({
         team_id: choice,
         user_id: user.id,
         choice_order: order,

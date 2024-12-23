@@ -45,6 +45,7 @@ export const SurveyForm = ({
     return {
       isEmptyUserName: inputs.userName === '',
       isEmptyPosition: inputs.position === '',
+      isAllEmptyChoices: inputs.choices.every((choice) => choice === ''),
       hasEmptyChoices: inputs.choices.includes(''),
       isDuplicatedChoices: new Set(inputs.choices).size !== MAX_ROUND,
       isEmptyFormInputs: Object.values(inputs).every((value) => {
@@ -63,14 +64,21 @@ export const SurveyForm = ({
     if (validation.isEmptyPosition) {
       return toast.error('직군을 선택해주세요');
     }
-    if (validation.hasEmptyChoices) {
-      return toast.error('지망을 모두 선택해주세요');
-    }
-    if (
-      validation.isDuplicatedChoices &&
-      !confirm('중복된 지망이 있습니다. 계속하시겠습니까?')
-    ) {
-      return;
+    if (validation.isAllEmptyChoices) {
+      // @note: 불참한 사람을 위한 if 문 처리
+      if (!confirm('어떤 지망도 선택하지 않은채로 제출하시겠습니까?')) {
+        return;
+      }
+    } else {
+      if (validation.hasEmptyChoices) {
+        return toast.error('지망을 모두 선택해주세요');
+      }
+      if (
+        validation.isDuplicatedChoices &&
+        !confirm('중복된 지망이 있습니다. 계속하시겠습니까?')
+      ) {
+        return;
+      }
     }
 
     mutation.mutate(
