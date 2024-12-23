@@ -54,9 +54,7 @@ export const SurveyForm = ({
     };
   }, [inputs]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = () => {
     setIsClickedSubmit(true);
 
     if (validation.isEmptyUserName) {
@@ -124,7 +122,7 @@ export const SurveyForm = ({
   useBeforeUnload(!validation.isEmptyFormInputs);
 
   return (
-    <form
+    <section
       className={stack({
         flex: '1',
         width: '100%',
@@ -134,7 +132,6 @@ export const SurveyForm = ({
         wordBreak: 'keep-all',
         gap: '0',
       })}
-      onSubmit={handleSubmit}
     >
       <h1
         className={css({
@@ -272,14 +269,14 @@ export const SurveyForm = ({
       </section>
 
       <Button
-        type="submit"
         size="small"
         color="secondary"
         disabled={mutation.isPending}
+        onClick={handleSubmit}
       >
         {mutation.isPending ? '제출 중...' : '설문 제출하기'}
       </Button>
-    </form>
+    </section>
   );
 };
 
