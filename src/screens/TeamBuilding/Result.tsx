@@ -29,7 +29,7 @@ export const Result = ({ teamBuildingUuid }: ResultProps) => {
     const reshapedTeamInfoList: Array<ReshapedTeamInfo> = [];
     teamInfoList?.forEach((team) => {
       const joinedMembers =
-        userInfoList?.filter((user) => user.joinedTeamUuid) ?? [];
+        userInfoList?.filter((user) => user.joinedTeamUuid === team.uuid) ?? [];
       const reshapedTeamInfo: ReshapedTeamInfo = {
         teamUuid: team.uuid,
         teamName: team.teamName,
