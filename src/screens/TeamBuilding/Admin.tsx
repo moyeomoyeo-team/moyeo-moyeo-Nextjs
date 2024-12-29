@@ -289,6 +289,12 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
     toastWithSound.success('참여 링크가 복사되었습니다');
   };
 
+  const handleClickResultShareLink = () => {
+    const resultUrl = `${location.origin}/results/${teamBuildingUuid}`;
+    navigator.clipboard.writeText(resultUrl);
+    toastWithSound.success('팀 빌딩 결과 링크가 복사되었습니다');
+  };
+
   const handleClickStartTeamBuilding = () => {
     startTeamBuilding(
       { teamBuildingUuid },
@@ -633,9 +639,13 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
                     color: 'gray.20',
                     cursor: 'pointer',
                   })}
-                  onClick={handleClickShareLink}
+                  onClick={
+                    isFinishedTeamBuilding
+                      ? handleClickResultShareLink
+                      : handleClickShareLink
+                  }
                 >
-                  PM 입장
+                  {isFinishedTeamBuilding ? '결과 공유' : 'PM 입장'}
                 </button>
               </div>
             </div>
