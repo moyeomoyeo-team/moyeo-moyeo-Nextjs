@@ -3,8 +3,8 @@ name: Call health check API
 on:
   workflow_dispatch:
   schedule:
-    # 매 정각(UTC 기준)에 실행
-    - cron: '0 * * * *'
+    # 매일 12시 정각(UTC 기준)에 실행
+    - cron: '0 0 * * *'
 
 jobs:
   health-check:
