@@ -457,9 +457,9 @@ export const Admin = ({ teamBuildingUuid }: AdminProps) => {
           // 이후 로직은 handleSelectTeam에서 처리됨.
         }}
         onClickDelete={() => {
-          if (teamBuildingInfo?.roundStatus !== 'FIRST_ROUND') {
+          if (teamBuildingInfo?.roundStatus !== 'START') {
             return toastWithSound.error(
-              '1지망 라운드에서만 유저 정보를 삭제할 수 있습니다.\n배정 해제는 재배정 버튼을 눌러주세요.',
+              '대기 라운드에서만 유저 정보를 삭제할 수 있습니다.\n배정 해제는 재배정 버튼을 눌러주세요.',
             );
           }
 
