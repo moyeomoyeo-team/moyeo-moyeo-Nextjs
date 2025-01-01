@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import React from 'react';
 
 import { useGetTotalInfo } from '@/apis/team-building/queries';
+import Spinner from '@/components/Spinner';
 import { css } from '@/styled-system/css';
 import { hstack } from '@/styled-system/patterns';
 
@@ -20,7 +21,10 @@ type ReshapedTeamInfo = {
 };
 
 export const Result = ({ teamBuildingUuid }: ResultProps) => {
-  const { data: totalInfo } = useGetTotalInfo(teamBuildingUuid, false);
+  const { data: totalInfo, isLoading } = useGetTotalInfo(
+    teamBuildingUuid,
+    false,
+  );
   const { teamBuildingInfo, teamInfoList, userInfoList } = totalInfo ?? {};
 
   const isFinishedTeamBuilding = teamBuildingInfo?.roundStatus === 'COMPLETE';
@@ -73,6 +77,7 @@ export const Result = ({ teamBuildingUuid }: ResultProps) => {
     return reshapedTeamInfoList;
   }, [teamInfoList, userInfoList]);
 
+  if (isLoading) return <Spinner />;
   return (
     <div
       className={css({
