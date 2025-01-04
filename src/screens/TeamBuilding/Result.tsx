@@ -134,7 +134,9 @@ export const Result = ({ teamBuildingUuid }: ResultProps) => {
               />
               <p className={css({ textStyle: 'p2' })}>{team.teamName}</p>
             </div>
-            <div className={hstack({ alignItems: 'stretch' })}>
+            <div
+              className={hstack({ alignItems: 'stretch', flexWrap: 'wrap' })}
+            >
               {team.members.map((member, index) => (
                 <React.Fragment key={index}>
                   <div
